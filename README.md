@@ -329,7 +329,7 @@ authentication:
   users:
     - username: admin
       password: admin
-### dashboard register in docker-compse file
+## dashboard register in docker-compse file
 
 dashboard:
     image: apache/apisix-dashboard:2.13.1-alpine
@@ -344,12 +344,19 @@ dashboard:
 
 
 example>docker-compose pull dashboard
+
+
 example>docker-compose down
+
+
 example>docker-compose up  # this command up show all logs
+
 or 
+
 >docker-compose up -d dashboard
 
 
 ## search on browser 
+
 ## http://localhost:9000/
 
