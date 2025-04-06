@@ -220,6 +220,7 @@ Apisix Setup:
 Step 1: Clone the APISIX Docker Example Repo
 
 > git clone https://github.com/apache/apisix-docker.git
+
 > cd apisix-docker/example  ## Here is having docker file docker-compose.yml
 -------------------------------------
 Docker related
