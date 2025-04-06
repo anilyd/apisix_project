@@ -177,3 +177,179 @@ During the deployment process, in addition to the above operations, APISIX also 
 ## License
 
 Licensed under the Apache License, Version 2.0: [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##MY setup command by anil kumar yadav
+
+
+
+
+Apisix Setup:
+
+Step 1: Clone the APISIX Docker Example Repo
+
+> git clone https://github.com/apache/apisix-docker.git
+> cd apisix-docker/example  ## Here is having docker file docker-compose.yml
+-------------------------------------
+Docker related
+
+## if getting error of running port then commnd
+#1. Check which processes are using those ports
+> sudo lsof -i :2379
+2. Stop the conflicting processes
+> sudo kill -9 <PID>
+
+## command to check docker running port
+>3. Check for conflicting Docker containers
+To find containers using the ports:
+>docker ps
+
+##command to stop docker
+>docker stop <container_id>
+
+Step 2: Start APISIX using Docker Compose
+
+example>docker-compose down
+example>docker-compose up
+
+----------------------------------------------
+
+
+
+------------------------------
+APISIX on postman base check APISIX admin working or not
+
+Check APISIX Admin API is alive
+curl http://localhost:9180/apisix/admin/routes \
+  -H 'X-API-KEY: <your-api-key>'
+### replace you api-key
+## Replace <your-api-key> with your actual key from the config file. Default is usually:  default use  X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+
+
+### How add new route using postman 
+Here’s how to test a basic route setup in APISIX (via Admin API):
+
+curl http://localhost:9180/apisix/admin/routes/1 \
+  -X PUT \
+  -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "uri": "/hello",
+    "upstream": {
+      "type": "roundrobin",
+      "nodes": {
+        "httpbin.org:80": 1
+      }
+    }
+  }'
+------------------------------------------------------
+if issue with upstream
+ Replace with Local Upstream (Best for now)
+>docker run -d --name httpbin-local -p 8080:80 kennethreitz/httpbin
+
+curl -X PUT http://localhost:9180/apisix/admin/routes/1 \
+  -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "uri": "/hello",
+    "upstream": {
+      "type": "roundrobin",
+      "nodes": {
+        "host.docker.internal:8080": 1
+      }
+    }
+  }'
+------------------------------------
+
+
+## our apisix admin will not open at http://localhost:9000/
+
+## How to fix it  
+# How to check apisix having dashboard or not at browser
+example>docker ps --filter "name=dashboard"
+
+
+✅ Step-by-Step Instructions:
+📁 1. Create the Dashboard Config Folder and File:
+Run these commands in your terminal:
+
+example>mkdir -p /mnt/d/06_april_apisix/apisix-docker/example/dashboard_conf
+
+>nano /mnt/d/06_april_apisix/apisix-docker/example/dashboard_conf/conf.yaml
+
+conf.yaml
+
+
+conf:
+  listen:
+    host: 0.0.0.0
+    port: 9000
+
+  etcd:
+    endpoints:
+      - "http://etcd:2379"
+    # username: ""   ## Here  etcd
+    # password: ""
+
+authentication:
+  secret: secret-key-of-dashboard
+  expire_time: 3600
+  users:
+    - username: admin
+      password: admin
+### dashboard register in docker-compse file
+
+dashboard:
+    image: apache/apisix-dashboard:2.13.1-alpine
+    container_name: apisix_dashboard
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./dashboard_conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+    networks:
+      - apisix  # 👈 Add this line
+
+
+example>docker-compose pull dashboard
+example>docker-compose down
+example>docker-compose up  # this command up show all logs
+or 
+>docker-compose up -d dashboard
+
+
+## search on browser 
+## http://localhost:9000/
+
