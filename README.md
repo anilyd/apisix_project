@@ -251,6 +251,8 @@ example>docker-compose up
 ------------------------------
 APISIX on postman base check APISIX admin working or not
 
+```shell
+
 Check APISIX Admin API is alive
 curl http://localhost:9180/apisix/admin/routes \
   -H 'X-API-KEY: <your-api-key>'
@@ -274,6 +276,8 @@ curl http://localhost:9180/apisix/admin/routes/1 \
       }
     }
   }'
+
+```
 ------------------------------------------------------
 if issue with upstream
  Replace with Local Upstream (Best for now)
