@@ -50,6 +50,17 @@ services:
     networks:
       apisix:
 
+  dashboard:
+    image: apache/apisix-dashboard:2.13.1-alpine
+    container_name: apisix_dashboard
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./dashboard_conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+    networks:
+      - apisix  # 👈 Add this line
+
   web1:
     image: nginx:1.19.0-alpine
     restart: always
@@ -84,17 +95,7 @@ services:
     networks:
       apisix:
 
-  grafana:
-    image: grafana/grafana:7.3.7
-    restart: always
-    ports:
-      - "3000:3000"
-    volumes:
-      - "./grafana_conf/provisioning:/etc/grafana/provisioning"
-      - "./grafana_conf/dashboards:/var/lib/grafana/dashboards"
-      - "./grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini"
-    networks:
-      apisix:
+
 
 networks:
   apisix:
